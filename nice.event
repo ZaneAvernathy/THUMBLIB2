@@ -1,0 +1,30 @@
+
+#include "THUMBLIB2.event"
+
+PUSH
+  ORG $02A558
+  BattleRandRoll2Rn:
+  {
+    t_ldr(r3, offs_gBattleStats)
+    t_ldhi(r3, r3)
+    t_lsl(r3, r3, 30)
+    t_bmi(return_r1)
+    t_cpi(r0, 69)
+    t_beq(return_true)
+    t_ldr(r3, offs_RandRoll2Rn)
+    t_bx(r3)
+
+    return_r1:
+    t_mov(r0, r1)
+    t_bx(lr)
+
+    return_true:
+    t_mvi(r0, 1)
+    t_bx(lr)
+
+    ALIGN 4
+
+    offs_gBattleStats: WORD $0203A4D4
+    offs_RandRoll2Rn:  WORD $08000CB8 | 1
+  }
+POP
