@@ -235,7 +235,7 @@
 
   // Load PC relative opcodes
 
-  #define ldpcBase(Rd, Label) "SHORT (01001b << 11) | (Rd << 8) | ((Label - CURRENTOFFSET - 4) / 4)"
+  #define ldpcBase(Rd, Label) "SHORT (01001b << 11) | (Rd << 8) | ((Label - (CURRENTOFFSET & 0xFFFFFFFD) - 4) / 4)"
 
   #define t_ldr(Rd, Label) "Switch(IsGreater(Rd, 7) + 1, ldpcBase(Rd, Label), errorLine mustLo(t_ldr))"
 
@@ -325,7 +325,7 @@
 
   // add Rd, pc, #NN
   // AKA add Rd, =addr
-  #define t_adpc(Rd, Label) "Switch(IsGreater(Rd, 7) + 1, graBase(0b, Rd, ((Label - CURRENTOFFSET - 4) / 4)), errorLine mustLo(t_adpc))"
+  #define t_adpc(Rd, Label) "Switch(IsGreater(Rd, 7) + 1, graBase(0b, Rd, ((Label - (CURRENTOFFSET & 0xFFFFFFFD) - 4) / 4)), errorLine mustLo(t_adpc))"
 
   // add Rd, sp, #NN
   #define t_adsp(Rd, Num) "Switch(IsGreater(Rd, 7) + ((IsGreater(Num, 1020)) * 2) + (Signum((Num % 4)) * 4) + 1, graBase(1b, Rd, Num >> 2), errorLine mustLo(t_adsp), errorLine mustRange(t_adsp, Num, 0, 1020), errorLine mustLo(t_adsp) mustRange(t_adsp, Num, 0, 1020), errorLine t_adsp parameter must be a multiple of 4, errorLine mustLo(t_adsp) t_adsp parameter must be a multiple of 4, errorLine mustRange(t_adsp, Num, 0, 1020) t_adsp parameter must be a multiple of 4, errorLine mustLo(t_adsp) mustRange(t_adsp, Num, 0, 1020) t_adsp parameter must be a multiple of 4)"
